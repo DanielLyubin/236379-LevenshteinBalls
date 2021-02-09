@@ -12,7 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29a58b76-3f8b-4a1b-b81d-1e9e12f9d7c0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Constants.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vector.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vector.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -71,7 +75,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1612872492170</updated>
-      <workItem from="1612872493440" duration="8510000" />
+      <workItem from="1612872493440" duration="9493000" />
     </task>
     <servers />
   </component>
