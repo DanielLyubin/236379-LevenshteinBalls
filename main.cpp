@@ -3,8 +3,8 @@
 #include <set>
 #include <cassert>
 #include <chrono>
-
 #include "Vector.h"
+
 // This function generates the vector space according to the vector length and alphabet
 /*TODO: Isn't it better to analyze vectors when creating them? Generating the space and then iterating on it will take
  * Twice the time
