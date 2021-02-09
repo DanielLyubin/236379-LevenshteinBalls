@@ -11,8 +11,8 @@ class Vector {
 public:
     Vector(const vector_t&);
     Vector(const std::string&);
-    const std::string& get_serialized_vector(void);
-    unsigned int get_number_of_runs(void);
+    const std::string& get_serialized_vector();
+    unsigned int get_number_of_runs();
 private:
     // This function returns the number of runs in the vector
     // For example, the function will return 5 for the 5-length binary vector '10101'
