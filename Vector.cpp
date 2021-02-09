@@ -24,11 +24,11 @@ Vector::Vector(const std::string & vector) : serializedVector(vector) {
     this->numberOfRuns = runs(this->vector);
 }
 
-unsigned int Vector::get_number_of_runs(void) {
+unsigned int Vector::get_number_of_runs() {
     return numberOfRuns;
 }
 
-const std::string &Vector::get_serialized_vector(void) {
+const std::string &Vector::get_serialized_vector() {
     return serializedVector;
 }
 
