@@ -9,8 +9,8 @@
 
 class Vector {
 public:
-    Vector(const vector_t&);
-    Vector(const std::string&);
+    explicit Vector(const vector_t&);
+    explicit Vector(const std::string&);
     const std::string& get_serialized_vector();
     unsigned int get_number_of_runs();
 private:
