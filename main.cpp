@@ -1,104 +1,104 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 #include <set>
 #include <cassert>
 #include <chrono>
-#include <sstream>
-#include <array>
-// N is vector length, q is size of alphabet
-//Note: these are predefined const expressions to enable compile-tine optimizations
-constexpr unsigned int N = 5, q = 2;
-
-using vector_t = std::array<unsigned char, N>;
-
-
-class Vector {
-public:
-    Vector(const vector_t&);
-    Vector(const std::string&);
-    const std::string& get_serialized_vector(void);
-    unsigned int get_number_of_runs(void);
-private:
-    // This function returns the number of runs in the vector
-    // For example, the function will return 5 for the 5-length binary vector '10101'
-    static unsigned int runs(const vector_t& vector);
-
-    vector_t vector;
-    std::string serializedVector;
-    unsigned int numberOfRuns;
-};
-Vector::Vector(const vector_t & vector) : vector(vector) {
-    numberOfRuns = runs(vector);
-    std::stringstream ss;
-    for (auto it = this->vector.begin(); it != this->vector.end(); ++it) {
-        char symbolAsChar[2] = {0,0};
-        itoa(*it, symbolAsChar, 10);
-        ss << symbolAsChar;
-    }
-    ss >> this->serializedVector;
-}
-
-unsigned int Vector::get_number_of_runs(void) {
-    return numberOfRuns;
-}
-
-const std::string &Vector::get_serialized_vector(void) {
-    return serializedVector;
-}
-
-unsigned int Vector::runs(const vector_t& vector) {
-    unsigned int runs = 0;
-    auto it = vector.begin();
-    auto last_symbol = *it;
-    ++runs;
-    for (; it != vector.end(); ++it) {
-        if (*it != last_symbol) {
-            last_symbol = *it;
-            ++runs;
-        }
-    }
-    return runs;
-}
-
-Vector::Vector(const std::string & vector) : serializedVector(vector) {
-    int i = 0;
-    for (char digit : vector) {
-        this->vector[i] = digit - '0';
-        ++i;
-    }
-    this->numberOfRuns = runs(this->vector);
-}
-
-
+#include "Vector.h"
 
 // This function generates the vector space according to the vector length and alphabet
 /*TODO: Isn't it better to analyze vectors when creating them? Generating the space and then iterating on it will take
  * Twice the time
 */
-void generate_vector_space(std::set<vector_t >& vector_set);
-
+void find_maximal_balls_size(unsigned int N, int lowBound, int upperBound, unsigned int& l_ball, unsigned int& levenshtein_ball);
+void find_vectors_with_max_levenshtein_ball_size(unsigned int N, std::set<Vector>& vector_set,int lowBound, int upperBound);
+unsigned max_levenshtein_ball_in_vector_space = 0,max_l_ball_in_vector_space = 0;
+int lower_bound = 0, upper_bound = 0;
 int main() {
-    std::set<vector_t> vector_set;
-    auto start = std::chrono::system_clock::now();
-    generate_vector_space(vector_set);
-    auto end = std::chrono::system_clock::now();
-    assert(vector_set.size() == pow(q,N));
-    auto diff = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
-    std::cout << "Run time of vector space generation is " << diff << " seconds" << std::endl;
+    for (unsigned int n = 1; n <=19; ++n) {
+        max_levenshtein_ball_in_vector_space = 0;
+        max_l_ball_in_vector_space = 0;
+        lower_bound = 0;
+        upper_bound = 0;
+        std::cout << "******** N = " << n << " *********" << std::endl;
+
+        // Calculating max of group T(n) from papers
+        double calc = 0.5 * sqrt(1 + 2 * n);
+        auto t1 = static_cast<unsigned int>(round(calc));
+        auto lengthOfBalancedSequences = static_cast<unsigned int>(floor(static_cast<double>(n) / t1));
+        unsigned int prefix = 0;
+        for (int i = 0; i < lengthOfBalancedSequences; ++i) {
+            prefix <<= 1;
+            if (i % 2 == 0)
+                ++prefix;
+        }
+        lower_bound = prefix << (n - lengthOfBalancedSequences);
+        std::cout << lower_bound;
+        upper_bound = (prefix << (n - lengthOfBalancedSequences)) +
+                      static_cast<unsigned int>(pow(2, n - lengthOfBalancedSequences) - 1);
+        std::cout << ", " << upper_bound << std::endl;
+        int ranges[] = {lower_bound, upper_bound};
+        std::set<Vector> max_vector_set;
+        // find maximum of l-ball
+
+        auto start = std::chrono::system_clock::now();
+        unsigned int l_ball, levenshtein_ball;
+        find_maximal_balls_size(n,lower_bound, upper_bound, l_ball, levenshtein_ball);
+        if (levenshtein_ball > max_levenshtein_ball_in_vector_space)
+            max_levenshtein_ball_in_vector_space = levenshtein_ball;
+        if (l_ball > max_l_ball_in_vector_space)
+            max_l_ball_in_vector_space = l_ball;
+        auto end = std::chrono::system_clock::now();
+        auto diff = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+        std::cout << "Run time of range traversal " << diff << " seconds" << std::endl;
+
+        std::cout << "maximal levenshtein ball size is " << max_levenshtein_ball_in_vector_space << std::endl;
+        std::cout << "max l ball size is " << max_l_ball_in_vector_space << std::endl;
+        find_vectors_with_max_levenshtein_ball_size(n,max_vector_set, lower_bound, upper_bound);
+        std::cout << "number of vectors having max levenshtein ball size is " << max_vector_set.size() << std::endl;
+        for (const Vector &vector : max_vector_set) {
+            std::cout << vector << std::endl;
+        }
+        std::cout << std::endl << std::endl;
+    }
     return 0;
 }
 
-void generate_vector_space(std::set<vector_t>& vector_set) {
-    for (int i = 0; i <= pow(q,N) - 1; ++i) {
+void find_maximal_balls_size(unsigned int N,int lowBound, int upperBound, unsigned int& l_ball, unsigned int& levenshtein_ball) {
+    unsigned int max_l_ball = 0, max_levenshtein_ball = 0;
+    for (int i = lowBound; i <= upperBound - 1; ++i) {
         vector_t vec;
         int num = i;
         for (int j = N-1; j >=0; --j) {
-            vec[j] = num % q;
+            vec.insert(vec.begin(),num % q);
             num /= q;
         }
         Vector v(vec);
-        std::cout << "number of runs for vector " << v.get_serialized_vector() << " is " << v.get_number_of_runs() << std::endl;
-        vector_set.insert(vector_set.end(), vec);
+#if (VERBOSE == 1)
+        std::cout << v <<std::endl;
+#endif
+        if (v.get_levenshtein_ball_size() > max_levenshtein_ball)
+            max_levenshtein_ball = v.get_levenshtein_ball_size();
+        if (v.get_l_ball_size() > max_l_ball)
+            max_l_ball = v.get_l_ball_size();
+    }
+
+    l_ball = max_l_ball;
+    levenshtein_ball = max_levenshtein_ball;
+}
+
+void find_vectors_with_max_levenshtein_ball_size(unsigned int N,std::set<Vector>& vector_set,int lowBound, int upperBound) {
+    for (int i = lowBound; i <= upperBound - 1; ++i) {
+        vector_t vec;
+        int num = i;
+        for (int j = N-1; j >=0; --j) {
+            vec.insert(vec.begin(),num % q);
+            num /= q;
+        }
+        Vector v(vec);
+#if (VERBOSE == 1)
+        std::cout << v <<std::endl;
+#endif
+        if (v.get_levenshtein_ball_size() == max_levenshtein_ball_in_vector_space)
+            vector_set.insert(vector_set.end(), v);
     }
 }

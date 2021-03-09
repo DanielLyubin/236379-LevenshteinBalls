@@ -3,4 +3,4 @@ project(236379_LevenshteinBalls)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(236379_LevenshteinBalls main.cpp)
+add_executable(236379_LevenshteinBalls main.cpp Vector.cpp Constants.h)
