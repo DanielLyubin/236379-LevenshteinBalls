@@ -20,6 +20,8 @@ int main() {
         lower_bound = 0;
         upper_bound = 0;
         std::cout << "******** N = " << n << " *********" << std::endl;
+
+        // Calculating max of group T(n) from papers
         double calc = 0.5 * sqrt(1 + 2 * n);
         auto t1 = static_cast<unsigned int>(round(calc));
         auto lengthOfBalancedSequences = static_cast<unsigned int>(floor(static_cast<double>(n) / t1));
