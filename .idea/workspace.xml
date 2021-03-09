@@ -12,8 +12,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29a58b76-3f8b-4a1b-b81d-1e9e12f9d7c0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vector.h" beforeDir="false" afterPath="$PROJECT_DIR$/Vector.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
+    <list id="f107c3a3-2855-4d78-89f6-bc62b101a4d0" name="Revert: " comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +76,7 @@
       <updated>1612872492170</updated>
       <workItem from="1612872493440" duration="64840000" />
       <workItem from="1614367679721" duration="20702000" />
+      <workItem from="1615317441892" duration="287000" />
     </task>
     <task id="LOCAL-00001" summary="improved simulation">
       <created>1615315206100</created>

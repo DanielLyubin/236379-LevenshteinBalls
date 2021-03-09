@@ -1,15 +1,13 @@
 #include <iostream>
 #include <cmath>
 #include <set>
-#include <cassert>
 #include <chrono>
 #include "Vector.h"
 
-// This function generates the vector space according to the vector length and alphabet
-/*TODO: Isn't it better to analyze vectors when creating them? Generating the space and then iterating on it will take
- * Twice the time
-*/
+// This function finds the maximal balls size given a vector length N and first vector of set (as a numerical value of lower bound),
+// and last vector of set (as a numerical value of upper bound)
 void find_maximal_balls_size(unsigned int N, int lowBound, int upperBound, unsigned int& l_ball, unsigned int& levenshtein_ball);
+// This function returns vectors giving maximal levenshtein ball size (half of all of the vectors)
 void find_vectors_with_max_levenshtein_ball_size(unsigned int N, std::set<Vector>& vector_set,int lowBound, int upperBound);
 unsigned max_levenshtein_ball_in_vector_space = 0,max_l_ball_in_vector_space = 0;
 int lower_bound = 0, upper_bound = 0;

@@ -8,7 +8,7 @@
 #include <vector>
 #include <ostream>
 #include "Constants.h"
-
+// This class gives a convenient vector wrapper for calculating relevant properties (ball sizes, number of runs, etc)
 class Vector {
 public:
     explicit Vector(const vector_t&);
