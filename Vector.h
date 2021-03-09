@@ -18,6 +18,7 @@ public:
     const std::string& get_serialized_vector() const;
     unsigned int get_number_of_runs() const;
     unsigned int get_l_ball_size() const;
+    unsigned int get_levenshtein_ball_size() const;
 
     bool operator==(const Vector &rhs) const;
 
@@ -50,9 +51,12 @@ private:
 
     // This function calculates the l ball size of the vector and stores it in lBallSize
     void calculate_l_ball_size();
+
+    void calculate_levenshtein_ball_size();
     vector_t vector;
     std::vector<unsigned char> alternatingSegmentsLengths;
     unsigned int lBallSize;
+    unsigned int levenshteinBallSize;
     std::string serializedVector;
     unsigned int numberOfRuns;
 };

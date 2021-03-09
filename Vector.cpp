@@ -4,7 +4,10 @@
 
 #include "Vector.h"
 #include <sstream>
-Vector::Vector(const vector_t & vector) : vector(vector), alternatingSegmentsLengths(), lBallSize(), numberOfRuns() {
+#include <set>
+#include <iostream>
+
+Vector::Vector(const vector_t & vector) : vector(vector), alternatingSegmentsLengths(), lBallSize(),levenshteinBallSize(), numberOfRuns() {
     std::stringstream ss;
     for (auto it = this->vector.begin(); it != this->vector.end(); ++it) {
         char symbolAsChar[2] = {0,0};
@@ -14,6 +17,7 @@ Vector::Vector(const vector_t & vector) : vector(vector), alternatingSegmentsLen
     ss >> this->serializedVector;
 
     calculate_l_ball_size();
+    calculate_levenshtein_ball_size();
 }
 
 Vector::Vector(const std::string & vector) : serializedVector(vector), alternatingSegmentsLengths(), lBallSize(), numberOfRuns() {
@@ -23,6 +27,7 @@ Vector::Vector(const std::string & vector) : serializedVector(vector), alternati
         ++i;
     }
     calculate_l_ball_size();
+    calculate_levenshtein_ball_size();
 }
 
 unsigned int Vector::get_number_of_runs() const {
@@ -52,7 +57,7 @@ void Vector::calculate_alternating_segments() {
     unsigned int segmentLength = 0;
     char symbol1 = 0, symbol2 = 0;
 
-    while (j < N) {
+    while (j < vector.size()) {
         if (segmentLength == 0) {
             symbol1 = this->vector[i];
             ++segmentLength;
@@ -107,7 +112,7 @@ void Vector::calculate_l_ball_size() {
         sum += (segmentSize - 1) * (segmentSize - 2);
     }
     sum /= 2;
-    lBallSize = numberOfRuns * (N * (q - 1) - 1) + 2 - sum;
+    lBallSize = numberOfRuns * (vector.size() * (q - 1) - 1) + 2 - sum;
 }
 
 unsigned int Vector::get_l_ball_size() const {
@@ -141,6 +146,31 @@ bool Vector::operator>=(const Vector &rhs) const {
 std::ostream &operator<<(std::ostream &os, const Vector &vector) {
     os << "vector " << vector.get_serialized_vector() << " has "
         << vector.get_number_of_runs() << " runs, l ball size of "
-        << vector.get_l_ball_size();
+        << vector.get_l_ball_size() << ", levenshtein ball of size " << vector.get_levenshtein_ball_size();
     return os;
+}
+
+unsigned int Vector::get_levenshtein_ball_size() const {
+    return levenshteinBallSize;
+}
+
+void Vector::calculate_levenshtein_ball_size() {
+    auto length = vector.size();
+    unsigned int l_ball_radius_one = get_l_ball_size();
+    unsigned int radius_two_i_ball = 1 + (length+2) * (q-1) + (((length+1)*(length+2))/2) * (q-1)*(q-1);
+    unsigned int radius_two_d_ball = 0;
+    std::set<vector_t > deletion_ball;
+    for (int i = 0; i < length; ++i) {
+        for (int j = i + 1; j < length; ++j) {
+            vector_t arr;
+            for (int k = 0; k < length; ++k) {
+                if (k == i || k == j)
+                    continue;
+                arr.push_back(this->vector[k]);
+            }
+            deletion_ball.insert(arr);
+        }
+    }
+    radius_two_d_ball = deletion_ball.size();
+    levenshteinBallSize = l_ball_radius_one + radius_two_d_ball + radius_two_i_ball;
 }
